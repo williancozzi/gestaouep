@@ -1,4 +1,5 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {}
+const webpack = require("webpack");
 
-module.exports = nextConfig
+module.exports = {
+  trailingSlash: true,
+};
