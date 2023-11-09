@@ -17,9 +17,14 @@ export const firebaseConfig = {
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const storage = getStorage(app);
-const auth = getAuth();
+const auth = getAuth(app);
 
-export default { app, db, storage, auth };
+export const firebase = {
+  app,
+  db,
+  storage,
+  auth,
+};
 
 export const signIn = async (username, password) =>
   await signInWithEmailAndPassword(auth, username, password);

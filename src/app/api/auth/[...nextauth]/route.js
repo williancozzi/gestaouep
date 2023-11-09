@@ -7,8 +7,8 @@ const handler = NextAuth({
     CredentialsProvider({
       name: "email",
       credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" },
+        username: { label: "Usuário", type: "text" },
+        password: { label: "Senha", type: "password" },
       },
 
       async authorize(credentials, req) {
@@ -19,14 +19,19 @@ const handler = NextAuth({
           credentials.password
         );
         if (user) {
+
           const nextUser = {
             id: user.uid,
             name: user.displayName,
             email: user.email,
             image: user.photoURL,
           };
+
+          console.log("User: ", user);
+
           return nextUser;
         }
+
         return null;
       },
     }),
@@ -35,6 +40,12 @@ const handler = NextAuth({
   //   signIn: "/auth/signin",
   //   error: "/auth/error",
   // },
+  theme: {
+    colorScheme: "light",
+    brandColor: "#007b93",
+    logo: "https://cdn.discordapp.com/attachments/445728799850627082/1171870697627340800/logo-azul.png",
+    buttonText: "#007b93",
+  },
 });
 
 export { handler as GET, handler as POST };
