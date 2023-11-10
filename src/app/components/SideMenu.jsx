@@ -4,13 +4,18 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import Groups from "@mui/icons-material/Groups";
 
 export default function SideMenu() {
   return (
-    <Box sx={{ width: "100%", maxWidth: 220, backgroundColor: "#424242", height: '100vh' }}>
+    <Box
+      sx={{
+        minWidth: 230,
+        backgroundColor: "#424242",
+        height: "100vh",
+      }}
+    >
       <nav aria-label="main mailbox folders">
         <List>
           <ListItem disablePadding>
