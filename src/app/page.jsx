@@ -1,22 +1,37 @@
 "use client";
 
+import { Stack } from "@mui/material";
+import LoginButton from "./components/LoginButton";
+import Loading from "./components/Loading";
 import { useSession } from "next-auth/react";
-import SideMenu from "./components/SideMenu";
-import Header from "./components/Header";
-import { Box } from "@mui/material";
+import { useState, useEffect } from "react";
+import Dashboard from "./dashboard/page";
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
   const { data: session } = useSession();
 
-  return (
-    <main>
-      <Header />
-      {session ? (
-        <Box display={"flex"}>
-          <SideMenu />
-          <Box sx={{ color: "black"}}>miolo</Box>
-        </Box>
-      ) : null}
-    </main>
-  );
+  useEffect(() => {
+    if (session !== undefined) {
+      setLoading(false);
+    }
+  }, [session]);
+
+  if (loading) {
+    return (
+      <Stack minHeight="100vh" justifyContent="center">
+        <Loading />
+      </Stack>
+    );
+  }
+
+  if (!session) {
+    return (
+      <Stack textAlign="center" minHeight="100vh" justifyContent="center">
+        <LoginButton />
+      </Stack>
+    );
+  }
+
+  return <Dashboard />;
 }
