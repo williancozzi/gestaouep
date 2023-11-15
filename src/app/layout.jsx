@@ -2,7 +2,7 @@ import "./globals.css";
 import AuthContext from "./authContext";
 import SideMenu from "./components/SideMenu";
 import Header from "./components/Header";
-import { Box, Container } from "@mui/material";
+import { Box } from "@mui/material";
 
 export const metadata = {
   title: "Gestão UEP",
@@ -29,7 +29,9 @@ export default function RootLayout({ children }) {
           <Header />
           <Box display={"flex"}>
             <SideMenu />
-            <Container>{children}</Container>
+            <Box margin={2} color={"black"}>
+              {children}
+            </Box>
           </Box>
         </body>
       </AuthContext>

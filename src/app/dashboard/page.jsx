@@ -1,7 +1,7 @@
-"use cliente";
+"use client";
 
-import { Typography } from "@mui/material";
+import { Container } from "@mui/material";
 
 export default function Dashboard() {
-  return <Typography color={"black"}>Dashboard / Página inicial</Typography>;
+  return <Container>Dashboard</Container>;
 }

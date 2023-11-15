@@ -27,7 +27,12 @@ export default function Home() {
 
   if (!session) {
     return (
-      <Stack textAlign="center" minHeight="100vh" justifyContent="center">
+      <Stack
+        textAlign="center"
+        minHeight="100vh"
+        minWidth="100vw"
+        justifyContent="center"
+      >
         <LoginButton />
       </Stack>
     );

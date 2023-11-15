@@ -1,5 +1,11 @@
-import { Typography } from "@mui/material";
+"use client";
+import { Container } from "@mui/material";
+import FinancialTabs from "../components/FinancialTabs";
 
 export default function FinancialPage() {
-  return <Typography color={"black"}>FinancialPage</Typography>;
+  return (
+    <Container>
+      <FinancialTabs />
+    </Container>
+  );
 }
