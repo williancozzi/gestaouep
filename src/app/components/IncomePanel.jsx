@@ -5,6 +5,7 @@ import FinancialSelect from "./FinancialSelect";
 import { Box, Stack, TextField, Button } from "@mui/material";
 import { incomeClass, incomeType } from "./FinancialSelect";
 import CustomizedSnackbars from "./CustomizedSnackbars";
+import saveIncomesToFirestore from "../services/saveIncomesToFirestore";
 
 export default function IncomePanel() {
   const [formData, setFormData] = useState({
@@ -24,10 +25,12 @@ export default function IncomePanel() {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: updatedValue }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     console.log("Form Data income:", formData);
+
+    await saveIncomesToFirestore(formData);
 
     setIsSnackbarOpen(true);
 
@@ -80,6 +83,7 @@ export default function IncomePanel() {
             onChange={handleInputChange}
             value={formData.incomeValue}
             sx={{ ml: "8px" }}
+            required
           />
         </Box>
         <Box>
@@ -104,6 +108,8 @@ export default function IncomePanel() {
         </Box>
       </Stack>
       <CustomizedSnackbars
+        severity="success"
+        message="Receita incluída com sucesso!"
         isOpen={isSnackbarOpen}
         handleClose={handleSnackbarClose}
       />

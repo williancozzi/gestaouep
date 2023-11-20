@@ -7,6 +7,8 @@ export const incomeType = [
   "Depósito Bancário",
   "Cheque",
   "Dinheiro em espécie",
+  "Cartão de crédito",
+  "Cartão de débito",
   "Outros",
 ];
 
@@ -15,7 +17,7 @@ export const incomeClass = [
   "Torta",
   "Bazar",
   "Festa",
-  "Brechório",
+  "Brechó",
   "Livraria",
   "Outros",
 ];
@@ -26,7 +28,7 @@ export const expenseType = [
   "Cheque",
   "Dinheiro em espécie",
   "Cartão de crédito",
-  "Cartão de dédito",
+  "Cartão de débito",
   "Outros",
 ];
 
@@ -62,6 +64,7 @@ export default function FinancialSelect({
         name={name}
         label={label}
         defaultValue="Escolha uma"
+        required
       >
         {typeOrClass &&
           typeOrClass.map((option) => (

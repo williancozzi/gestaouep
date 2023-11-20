@@ -5,6 +5,7 @@ import FinancialSelect from "./FinancialSelect";
 import { Box, Stack, TextField, Button } from "@mui/material";
 import { expenseClass, expenseType } from "./FinancialSelect";
 import CustomizedSnackbars from "./CustomizedSnackbars";
+import saveExpensestoFirestore from "../services/saveExpensestoFirestore";
 
 export default function ExpensePanel() {
   const [formData, setFormData] = useState({
@@ -24,10 +25,12 @@ export default function ExpensePanel() {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: updatedValue }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     console.log("Form Data expenses:", formData);
+
+    await saveExpensestoFirestore(formData);
 
     setIsSnackbarOpen(true);
 
@@ -80,6 +83,7 @@ export default function ExpensePanel() {
             onChange={handleInputChange}
             value={formData.expenseValue}
             sx={{ ml: "8px" }}
+            required
           />
         </Box>
         <Box>
@@ -104,6 +108,7 @@ export default function ExpensePanel() {
         </Box>
       </Stack>
       <CustomizedSnackbars
+        message="Despesa incluída com sucesso!"
         isOpen={isSnackbarOpen}
         handleClose={handleSnackbarClose}
       />
