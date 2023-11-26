@@ -1,11 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import {
+  Stack,
+  Tabs,
+  Tab,
+  Grid,
+  Typography,
+  Box,
+  Divider,
+} from "@mui/material";
 import IncomePanel from "./IncomePanel";
-import ExpensePanel from "./expensePanel";
+import ExpensePanel from "./ExpensePanel";
+import FinancialTable from "./FinancialTable";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -19,7 +25,7 @@ function CustomTabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 1 }}>
           {typeof children === "string" ? (
             <Typography>{children}</Typography>
           ) : (
@@ -60,7 +66,17 @@ export default function FinancialTabs() {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <IncomePanel />
+        <Grid container alignContent="center" width="100vw">
+          <Grid item xs={4}>
+            <IncomePanel />
+          </Grid>
+          <Grid item xs={6} mt={2} ml={4}>
+            <Stack spacing={2} maxWidth="48vw">
+              <Typography>Últimas receitas inseridas:</Typography>
+              <FinancialTable />
+            </Stack>
+          </Grid>
+        </Grid>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
         <ExpensePanel />

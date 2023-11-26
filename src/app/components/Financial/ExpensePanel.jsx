@@ -1,18 +1,18 @@
 "use client";
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
-import FinancialSelect from "./FinancialSelect";
+import FinancialSelect from "../Financial/FinancialSelect";
 import { Box, Stack, TextField, Button } from "@mui/material";
-import { incomeClass, incomeType } from "./FinancialSelect";
-import CustomizedSnackbars from "./CustomizedSnackbars";
-import saveIncomesToFirestore from "../services/saveIncomesToFirestore";
+import { expenseClass, expenseType } from "../Financial/FinancialSelect";
+import CustomizedSnackbars from "../CustomizedSnackbars";
+import saveExpensestoFirestore from "../../services/saveExpensestoFirestore";
 
-export default function IncomePanel() {
+export default function ExpensePanel() {
   const [formData, setFormData] = useState({
-    selectedIncomeOrigin: "",
-    selectedIncomeType: "",
-    incomeValue: "",
-    incomeDescription: "",
+    selectedExpenseOrigin: "",
+    selectedExpenseType: "",
+    expenseValue: "",
+    expenseDescription: "",
   });
 
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
@@ -20,7 +20,7 @@ export default function IncomePanel() {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
-    const updatedValue = name === "incomeValue" ? String(value) : value;
+    const updatedValue = name === "expenseValue" ? String(value) : value;
 
     setFormData((prevFormData) => ({ ...prevFormData, [name]: updatedValue }));
   };
@@ -28,17 +28,17 @@ export default function IncomePanel() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log("Form Data income:", formData);
+    console.log("Form Data expenses:", formData);
 
-    await saveIncomesToFirestore(formData);
+    await saveExpensestoFirestore(formData);
 
     setIsSnackbarOpen(true);
 
     setFormData({
-      selectedIncomeOrigin: "",
-      selectedIncomeType: "",
-      incomeValue: "",
-      incomeDescription: "",
+      selectedExpenseOrigin: "",
+      selectedExpenseType: "",
+      expenseValue: "",
+      expenseDescription: "",
     });
   };
 
@@ -51,65 +51,64 @@ export default function IncomePanel() {
   };
 
   return (
-    <form onSubmit={handleSubmit} id="income-panel-form">
+    <form onSubmit={handleSubmit} id="expense-panel-form">
       <Stack spacing={2} mt={2}>
         <Box>
-          <Typography gutterBottom>Registre a origem da receita:</Typography>
+          <Typography gutterBottom>Registre a origem da despesa:</Typography>
           <FinancialSelect
-            typeOrClass={incomeClass}
-            name="selectedIncomeOrigin"
+            typeOrClass={expenseClass}
+            name="selectedExpenseOrigin"
             onChange={handleInputChange}
-            value={formData.selectedIncomeOrigin}
+            value={formData.selectedExpenseOrigin}
           />
         </Box>
         <Box>
           <Typography gutterBottom>
-            Registre a forma de pagamento da receita:
+            Registre a forma de pagamento da despesa:
           </Typography>
           <FinancialSelect
-            typeOrClass={incomeType}
-            name="selectedIncomeType"
+            typeOrClass={expenseType}
+            name="selectedExpenseType"
             onChange={handleInputChange}
-            value={formData.selectedIncomeType}
+            value={formData.selectedExpenseType}
           />
         </Box>
         <Box>
-          <Typography gutterBottom>Registre o valor da receita:</Typography>
+          <Typography gutterBottom>Registre o valor da despesa:</Typography>
           <TextField
-            id="incomeValue"
+            id="expenseValue"
             label="Valor em R$"
-            name="incomeValue"
+            name="expenseValue"
             type="number"
             onChange={handleInputChange}
-            value={formData.incomeValue}
+            value={formData.expenseValue}
             sx={{ ml: "8px" }}
             required
           />
         </Box>
         <Box>
           <Typography gutterBottom>
-            Registre uma descrição ou observação sobre essa receita:
+            Registre uma descrição ou observação sobre essa despesa:
           </Typography>
           <TextField
-            id="incomeDescription"
+            id="expenseDescription"
             label="Descrição/observação"
             multiline
             rows={12}
             sx={{ minWidth: "40vw", mt: "4px", ml: "8px" }}
-            name="incomeDescription"
+            name="expenseDescription"
             onChange={handleInputChange}
-            value={formData.incomeDescription}
+            value={formData.expenseDescription}
           />
         </Box>
         <Box textAlign={"right"}>
           <Button variant="contained" type="submit">
-            Adicionar receita
+            Adicionar despesa
           </Button>
         </Box>
       </Stack>
       <CustomizedSnackbars
-        severity="success"
-        message="Receita incluída com sucesso!"
+        message="Despesa incluída com sucesso!"
         isOpen={isSnackbarOpen}
         handleClose={handleSnackbarClose}
       />

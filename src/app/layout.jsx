@@ -2,7 +2,8 @@ import "./globals.css";
 import AuthContext from "./authContext";
 import SideMenu from "./components/SideMenu";
 import Header from "./components/Header";
-import { Box } from "@mui/material";
+import Footer from "./components/Footer";
+import { Box, Grid } from "@mui/material";
 
 export const metadata = {
   title: "Gestão UEP",
@@ -29,10 +30,11 @@ export default function RootLayout({ children }) {
           <Header />
           <Box display={"flex"}>
             <SideMenu />
-            <Box margin={2} color={"black"}>
+            <Grid margin={1} color={"black"}>
               {children}
-            </Box>
+            </Grid>
           </Box>
+          <Footer />
         </body>
       </AuthContext>
     </html>
