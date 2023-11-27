@@ -63,7 +63,6 @@ export default function FinancialSelect({
         sx={{ minWidth: "22vw" }}
         name={name}
         label={label}
-        defaultValue="Escolha uma"
         required
       >
         {typeOrClass &&

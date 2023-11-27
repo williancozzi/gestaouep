@@ -9,6 +9,6 @@ export default async function saveIncomesToFirestore(income) {
     return true;
   } catch (error) {
     console.error("Erro ao adicionar documento ", error);
-    return false;
+    throw new Error("Falha ao salvar os dados no banco.");
   }
 }

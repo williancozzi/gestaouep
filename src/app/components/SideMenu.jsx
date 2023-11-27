@@ -18,7 +18,7 @@ export default function SideMenu() {
       sx={{
         minWidth: 230,
         backgroundColor: "#424242",
-        height: "86vh",
+        height: "100%",
       }}
     >
       <nav aria-label="main mailbox folders">

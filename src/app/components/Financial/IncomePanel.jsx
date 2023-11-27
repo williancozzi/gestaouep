@@ -15,7 +15,11 @@ export default function IncomePanel() {
     incomeDescription: "",
   });
 
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [snackBarStatus, setSnackbarStatus] = useState({
+    isOpen: false,
+    message: "",
+    severity: "",
+  });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -26,20 +30,32 @@ export default function IncomePanel() {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    try {
+      event.preventDefault();
 
-    console.log("Form Data income:", formData);
+      console.log("Form Data income:", formData);
 
-    await saveIncomesToFirestore(formData);
+      await saveIncomesToFirestore(formData);
 
-    setIsSnackbarOpen(true);
+      setSnackbarStatus({
+        isOpen: true,
+        message: "Receita incluída com sucesso!",
+        severity: "success",
+      });
 
-    setFormData({
-      selectedIncomeOrigin: "",
-      selectedIncomeType: "",
-      incomeValue: "",
-      incomeDescription: "",
-    });
+      setFormData({
+        selectedIncomeOrigin: "",
+        selectedIncomeType: "",
+        incomeValue: "",
+        incomeDescription: "",
+      });
+    } catch (error) {
+      setSnackbarStatus({
+        isOpen: true,
+        message: `Erro: ${error.message}`,
+        severity: "error",
+      });
+    }
   };
 
   const handleSnackbarClose = (event, reason) => {
@@ -47,7 +63,7 @@ export default function IncomePanel() {
       return;
     }
 
-    setIsSnackbarOpen(false);
+    setSnackbarStatus({ isOpen: false });
   };
 
   return (
@@ -60,6 +76,7 @@ export default function IncomePanel() {
             name="selectedIncomeOrigin"
             onChange={handleInputChange}
             value={formData.selectedIncomeOrigin}
+            label="Escolha uma opção"
           />
         </Box>
         <Box>
@@ -71,6 +88,7 @@ export default function IncomePanel() {
             name="selectedIncomeType"
             onChange={handleInputChange}
             value={formData.selectedIncomeType}
+            label="Escolha uma opção"
           />
         </Box>
         <Box>
@@ -108,9 +126,9 @@ export default function IncomePanel() {
         </Box>
       </Stack>
       <CustomizedSnackbars
-        severity="success"
-        message="Receita incluída com sucesso!"
-        isOpen={isSnackbarOpen}
+        severity={snackBarStatus.severity}
+        message={snackBarStatus.message}
+        isOpen={snackBarStatus.isOpen}
         handleClose={handleSnackbarClose}
       />
     </form>

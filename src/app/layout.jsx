@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
       <AuthContext>
         <body>
           <Header />
-          <Box display={"flex"}>
+          <Box display={"flex"} height="calc(100% - 128px)">
             <SideMenu />
             <Grid margin={1} color={"black"}>
               {children}

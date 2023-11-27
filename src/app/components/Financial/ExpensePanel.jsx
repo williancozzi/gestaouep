@@ -60,6 +60,7 @@ export default function ExpensePanel() {
             name="selectedExpenseOrigin"
             onChange={handleInputChange}
             value={formData.selectedExpenseOrigin}
+            label="Escolha uma opção"
           />
         </Box>
         <Box>
@@ -71,6 +72,7 @@ export default function ExpensePanel() {
             name="selectedExpenseType"
             onChange={handleInputChange}
             value={formData.selectedExpenseType}
+            label="Escolha uma opção"
           />
         </Box>
         <Box>
