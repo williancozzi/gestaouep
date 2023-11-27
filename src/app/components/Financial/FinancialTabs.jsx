@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import IncomePanel from "./IncomePanel";
 import ExpensePanel from "./ExpensePanel";
-import FinancialTable from "./FinancialTable";
+import IncomesTable from "./IncomesTable";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -73,7 +73,7 @@ export default function FinancialTabs() {
           <Grid item xs={6} mt={2} ml={4}>
             <Stack spacing={2} maxWidth="48vw">
               <Typography>Últimas receitas inseridas:</Typography>
-              <FinancialTable />
+              <IncomesTable />
             </Stack>
           </Grid>
         </Grid>

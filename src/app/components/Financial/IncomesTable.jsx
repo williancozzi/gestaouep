@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -7,27 +7,27 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
+import { getIncomesFromFirestore } from "../../services/getIncomesFromFirestore";
 
-const generateRandomString = (length) => {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-};
-
-const arrayOfObjects = Array.from({ length: 30 }, () => ({
-  selectedIncomeOrigin: generateRandomString(10),
-  selectedIncomeType: generateRandomString(10),
-  incomeValue: Math.floor(Math.random() * 1000) + 1,
-  incomeDescription: generateRandomString(80),
-}));
-
-export default function FinancialTable() {
+export default function IncomesTable() {
   const rowsPerPage = 10;
   const [page, setPage] = useState(0);
+  const [incomes, setIncomes] = useState([]);
+  const [isFetchComplete, setIsFetchComplete] = useState(false);
+
+  useEffect(() => {
+    const fetchIncomes = async () => {
+      try {
+        const incomesFromFirestore = await getIncomesFromFirestore();
+        setIncomes(incomesFromFirestore);
+        setIsFetchComplete(true);
+      } catch (error) {
+        console.error("Erro ao obter incomes do Firestore: ", error);
+      }
+    };
+
+    fetchIncomes();
+  }, [incomes]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -42,18 +42,18 @@ export default function FinancialTable() {
   };
 
   const renderRows = () => {
-    return arrayOfObjects
+    return incomes
       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-      .map((arrayOfObject) => (
+      .map((income) => (
         <TableRow
-          key={arrayOfObject.selectedIncomeOrigin}
+          key={income.id}
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
           <TableCell component="th" scope="row">
-            {arrayOfObject.selectedIncomeOrigin}
+            {income.selectedIncomeOrigin}
           </TableCell>
-          <TableCell>{arrayOfObject.selectedIncomeType}</TableCell>
-          <TableCell>{arrayOfObject.incomeValue}</TableCell>
+          <TableCell>{income.selectedIncomeType}</TableCell>
+          <TableCell>{income.incomeValue}</TableCell>
           <TableCell
             style={{
               whiteSpace: "nowrap",
@@ -61,7 +61,7 @@ export default function FinancialTable() {
               textOverflow: "ellipsis",
             }}
           >
-            {truncateText(arrayOfObject.incomeDescription, 40)}
+            {truncateText(income.incomeDescription, 40)}
           </TableCell>
         </TableRow>
       ));
@@ -84,7 +84,7 @@ export default function FinancialTable() {
       </TableContainer>
       <TablePagination
         component="div"
-        count={arrayOfObjects.length}
+        count={incomes.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
