@@ -1,15 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {
-  Stack,
-  Tabs,
-  Tab,
-  Grid,
-  Typography,
-  Box,
-  Divider,
-} from "@mui/material";
-import IncomePanel from "./IncomePanel";
+import { Stack, Tabs, Tab, Grid, Typography, Box, Button } from "@mui/material";
 import ExpensePanel from "./ExpensePanel";
 import IncomesTable from "./IncomesTable";
 
@@ -56,6 +47,10 @@ export default function FinancialTabs() {
     setValue(newValue);
   };
 
+  const onClick = (event) => {
+    console.log(event);
+  };
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -67,13 +62,21 @@ export default function FinancialTabs() {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <Grid container alignContent="center" width="100vw">
-          <Grid item xs={4}>
-            <IncomePanel />
-          </Grid>
-          <Grid item xs={6} mt={2} ml={4}>
-            <Stack spacing={2} maxWidth="48vw">
-              <Typography>Últimas receitas inseridas:</Typography>
+          <Grid item xs={12} mt={2} ml={4}>
+            <Stack spacing={2} maxWidth="82%">
               <IncomesTable />
+              <Box textAlign="right" pr={4}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  sx={{
+                    borderRadius: "50%",
+                    maxWidth: 60,
+                    minHeight: 60,
+                  }}
+                  onClick={onClick}
+                >+</Button>
+              </Box>
             </Stack>
           </Grid>
         </Grid>

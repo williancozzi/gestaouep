@@ -7,7 +7,7 @@ import { incomeClass, incomeType } from "./FinancialSelect";
 import CustomizedSnackbars from "../CustomizedSnackbars";
 import saveIncomesToFirestore from "../../services/saveIncomesToFirestore";
 
-export default function IncomePanel() {
+export default function IncomeModal() {
   const [formData, setFormData] = useState({
     selectedIncomeOrigin: "",
     selectedIncomeType: "",

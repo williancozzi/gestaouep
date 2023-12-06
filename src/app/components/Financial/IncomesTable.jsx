@@ -7,7 +7,10 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { getIncomesFromFirestore } from "../../services/getIncomesFromFirestore";
+import { Stack } from "@mui/material";
 
 export default function IncomesTable() {
   const rowsPerPage = 10;
@@ -27,7 +30,7 @@ export default function IncomesTable() {
     };
 
     fetchIncomes();
-  }, [incomes]);
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -39,6 +42,18 @@ export default function IncomesTable() {
     } else {
       return `${text.slice(0, minLength)}...`;
     }
+  };
+
+  const handleEdit = (incomeId) => {
+    const editedIncome = incomes.find((income) => income.id === incomeId);
+    console.log("Edit clicked for income:", editedIncome);
+    // Add your edit logic here
+  };
+
+  const handleDelete = (incomeId) => {
+    const deletedIncome = incomes.find((income) => income.id === incomeId);
+    console.log("Delete clicked for income:", deletedIncome);
+    // Add your delete logic here
   };
 
   const renderRows = () => {
@@ -63,6 +78,18 @@ export default function IncomesTable() {
           >
             {truncateText(income.incomeDescription, 40)}
           </TableCell>
+          <TableCell>
+            <Stack direction="row" spacing={4}>
+              <EditIcon
+                style={{ cursor: "pointer" }}
+                onClick={() => handleEdit(income.id)}
+              />
+              <DeleteIcon
+                style={{ cursor: "pointer", color: "red" }}
+                onClick={() => handleDelete(income.id)}
+              />
+            </Stack>
+          </TableCell>
         </TableRow>
       ));
   };
@@ -71,12 +98,13 @@ export default function IncomesTable() {
     <Paper>
       <TableContainer>
         <Table aria-label="tabela de receitas">
-          <TableHead>
+          <TableHead sx={{ backgroundColor: "#d9d9db" }}>
             <TableRow>
               <TableCell>Origem</TableCell>
-              <TableCell>Forma de Pgto</TableCell>
+              <TableCell>Forma de Pagamento</TableCell>
               <TableCell>Valor (R$)</TableCell>
               <TableCell>Descrição</TableCell>
+              <TableCell>Opções</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{renderRows()}</TableBody>
