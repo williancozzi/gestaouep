@@ -25,7 +25,7 @@ export default function IncomesTable() {
         setIncomes(incomesFromFirestore);
         setIsFetchComplete(true);
       } catch (error) {
-        console.error("Erro ao obter incomes do Firestore: ", error);
+        console.error("Error fetching incomes from Firestore: ", error);
       }
     };
 
@@ -36,24 +36,35 @@ export default function IncomesTable() {
     setPage(newPage);
   };
 
+  const debounce = (func, delay) => {
+    let timer;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const handleEditDebounced = debounce(handleEdit, 1000);
+  const handleDeleteDebounced = debounce(handleDelete, 1000);
+
+  function handleEdit(incomeId) {
+    const editedIncome = incomes.find((income) => income.id === incomeId);
+    console.log("Edit clicked for income:", editedIncome);
+    // Add edit logic here
+  }
+
+  function handleDelete(incomeId) {
+    const deletedIncome = incomes.find((income) => income.id === incomeId);
+    console.log("Delete clicked for income:", deletedIncome);
+    // Add delete logic here
+  }
+
   const truncateText = (text, minLength) => {
     if (text.length < minLength) {
       return text.padEnd(minLength, " ");
     } else {
       return `${text.slice(0, minLength)}...`;
     }
-  };
-
-  const handleEdit = (incomeId) => {
-    const editedIncome = incomes.find((income) => income.id === incomeId);
-    console.log("Edit clicked for income:", editedIncome);
-    // Add your edit logic here
-  };
-
-  const handleDelete = (incomeId) => {
-    const deletedIncome = incomes.find((income) => income.id === incomeId);
-    console.log("Delete clicked for income:", deletedIncome);
-    // Add your delete logic here
   };
 
   const renderRows = () => {
@@ -82,11 +93,11 @@ export default function IncomesTable() {
             <Stack direction="row" spacing={4}>
               <EditIcon
                 style={{ cursor: "pointer" }}
-                onClick={() => handleEdit(income.id)}
+                onClick={() => handleEditDebounced(income.id)}
               />
               <DeleteIcon
                 style={{ cursor: "pointer", color: "red" }}
-                onClick={() => handleDelete(income.id)}
+                onClick={() => handleDeleteDebounced(income.id)}
               />
             </Stack>
           </TableCell>

@@ -1,3 +1,4 @@
+import React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
@@ -50,9 +51,7 @@ export default function FinancialSelect({
 }) {
   return (
     <Box
-      sx={{
-        "& .MuiTextField-root": { m: 1, width: "25ch" },
-      }}
+      sx={{ "& .MuiTextField-root": { m: 1, width: "25ch" } }}
       autoComplete="off"
     >
       <TextField
@@ -65,7 +64,8 @@ export default function FinancialSelect({
         label={label}
         required
       >
-        {typeOrClass &&
+        {Array.isArray(typeOrClass) &&
+          typeOrClass.length > 0 &&
           typeOrClass.map((option) => (
             <MenuItem key={option} value={option}>
               {option}

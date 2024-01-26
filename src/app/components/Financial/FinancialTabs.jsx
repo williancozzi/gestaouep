@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Stack, Tabs, Tab, Grid, Typography, Box, Button } from "@mui/material";
 import ExpensePanel from "./ExpensePanel";
 import IncomesTable from "./IncomesTable";
+import IncomeModal from "./IncomeModal";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -47,10 +48,6 @@ export default function FinancialTabs() {
     setValue(newValue);
   };
 
-  const onClick = (event) => {
-    console.log(event);
-  };
-
   return (
     <Box sx={{ width: "100%" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -66,16 +63,7 @@ export default function FinancialTabs() {
             <Stack spacing={2} maxWidth="82%">
               <IncomesTable />
               <Box textAlign="right" pr={4}>
-                <Button
-                  variant="contained"
-                  color="success"
-                  sx={{
-                    borderRadius: "50%",
-                    maxWidth: 60,
-                    minHeight: 60,
-                  }}
-                  onClick={onClick}
-                >+</Button>
+                <IncomeModal />
               </Box>
             </Stack>
           </Grid>
