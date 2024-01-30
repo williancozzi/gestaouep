@@ -18,7 +18,7 @@ const formatCurrency = (value) => {
 
   const numericValue = value.replace(/[^\d]/g, "");
 
-  if (!numericValue) return ""; // Added to handle empty numericValue
+  if (!numericValue) return "";
 
   const floatValue = parseFloat(numericValue / 100).toFixed(2);
 

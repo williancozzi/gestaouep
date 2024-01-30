@@ -41,6 +41,7 @@ export default function IncomeModal() {
 
       setFormData(initialFormData);
       setOpenDialog(false);
+      // window.location.reload();
     } catch (error) {
       setSnackbarStatus({
         isOpen: true,

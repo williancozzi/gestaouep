@@ -10,13 +10,21 @@ import Paper from "@mui/material/Paper";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getIncomesFromFirestore } from "../../services/getIncomesFromFirestore";
+import { deleteIncomeFromFirestore } from "../../services/deleteIncomeFromFirestore";
 import { Stack } from "@mui/material";
+import CustomizedSnackbars from "../CustomizedSnackbars";
 
 export default function IncomesTable() {
   const rowsPerPage = 10;
   const [page, setPage] = useState(0);
   const [incomes, setIncomes] = useState([]);
   const [isFetchComplete, setIsFetchComplete] = useState(false);
+
+  const [snackBarStatus, setSnackBarStatus] = useState({
+    isOpen: false,
+    severity: "success",
+    message: "",
+  });
 
   useEffect(() => {
     const fetchIncomes = async () => {
@@ -50,13 +58,32 @@ export default function IncomesTable() {
   function handleEdit(incomeId) {
     const editedIncome = incomes.find((income) => income.id === incomeId);
     console.log("Edit clicked for income:", editedIncome);
-    // Add edit logic here
+    // Adicione lógica de edição aqui
   }
 
-  function handleDelete(incomeId) {
-    const deletedIncome = incomes.find((income) => income.id === incomeId);
-    console.log("Delete clicked for income:", deletedIncome);
-    // Add delete logic here
+  async function handleDelete(incomeId) {
+    try {
+      const deletedIncome = incomes.find((income) => income.id === incomeId);
+
+      await deleteIncomeFromFirestore(incomeId);
+
+      const updatedIncomes = await getIncomesFromFirestore();
+      setIncomes(updatedIncomes);
+
+      setSnackBarStatus({
+        isOpen: true,
+        severity: "success",
+        message: "Receita excluída com sucesso!",
+      });
+    } catch (error) {
+      console.error("Erro ao excluir a receita: ", error);
+
+      setSnackBarStatus({
+        isOpen: true,
+        severity: "error",
+        message: "Erro ao excluir a receita.",
+      });
+    }
   }
 
   const truncateText = (text, minLength) => {
@@ -65,6 +92,13 @@ export default function IncomesTable() {
     } else {
       return `${text.slice(0, minLength)}...`;
     }
+  };
+
+  const handleCloseSnackBar = () => {
+    setSnackBarStatus({
+      ...snackBarStatus,
+      isOpen: false,
+    });
   };
 
   const renderRows = () => {
@@ -128,6 +162,12 @@ export default function IncomesTable() {
         page={page}
         onPageChange={handleChangePage}
         rowsPerPageOptions={[]}
+      />
+      <CustomizedSnackbars
+        severity={snackBarStatus.severity}
+        message={snackBarStatus.message}
+        isOpen={snackBarStatus.isOpen}
+        handleClose={handleCloseSnackBar}
       />
     </Paper>
   );
