@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Stack, Tabs, Tab, Grid, Typography, Box, Button } from "@mui/material";
-import ExpensePanel from "./ExpensePanel";
 import IncomesTable from "./IncomesTable";
 import IncomeModal from "./IncomeModal";
 
@@ -70,7 +69,7 @@ export default function FinancialTabs() {
         </Grid>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <ExpensePanel />
+        expense table
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         Balancete

@@ -3,7 +3,7 @@ import { incomeClass, incomeType } from "./FinancialSelect";
 import { Button } from "@mui/material";
 import FinancialDialog from "./FinancialDialog";
 import CustomizedSnackbars from "../CustomizedSnackbars";
-import saveIncomesToFirestore from "../../services/saveIncomesToFirestore";
+import { saveIncomesToFirestore } from "../../services/saveIncomesToFirestore";
 
 export default function IncomeModal() {
   const initialFormData = {
