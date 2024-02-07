@@ -1,25 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { incomeClass, incomeType } from "./FinancialSelect";
-import { Button } from "@mui/material";
 import FinancialDialog from "./FinancialDialog";
 import CustomizedSnackbars from "../CustomizedSnackbars";
 import { saveIncomesToFirestore } from "../../services/saveIncomesToFirestore";
 
-export default function IncomeModal() {
-  const initialFormData = {
+export default function IncomeModal({
+  open,
+  onClose,
+  initialFormData,
+  editingIncomeId,
+  refreshIncomes,
+}) {
+  const defaultFormData = {
     selectedIncomeOrigin: "",
     selectedIncomeType: "",
     incomeValue: "",
     incomeDescription: "",
   };
 
-  const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState(initialFormData || defaultFormData);
   const [snackBarStatus, setSnackbarStatus] = useState({
     isOpen: false,
     message: "",
     severity: "",
   });
   const [openDialog, setOpenDialog] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setFormData(initialFormData || defaultFormData);
+    } else {
+      setFormData(defaultFormData);
+    }
+  }, [open, initialFormData]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -31,7 +44,7 @@ export default function IncomeModal() {
     try {
       event.preventDefault();
       console.log("Form Data income:", formData);
-      await saveIncomesToFirestore(formData);
+      await saveIncomesToFirestore(formData, editingIncomeId);
 
       setSnackbarStatus({
         isOpen: true,
@@ -40,8 +53,8 @@ export default function IncomeModal() {
       });
 
       setFormData(initialFormData);
-      setOpenDialog(false);
-      // window.location.reload();
+      onClose();
+      refreshIncomes();
     } catch (error) {
       setSnackbarStatus({
         isOpen: true,
@@ -62,23 +75,16 @@ export default function IncomeModal() {
     setOpenDialog(true);
   };
 
-  const handleDialogClose = () => {
-    setOpenDialog(false);
-  };
-
   return (
     <>
-      <Button variant="contained" onClick={handleDialogOpen}>
-        ADICIONAR UMA NOVA RECEITA
-      </Button>
       <FinancialDialog
-        open={openDialog}
-        handleClose={handleDialogClose}
+        open={open}
+        handleClose={onClose}
         handleFormSubmit={handleSubmit}
         snackBarStatus={snackBarStatus}
         formData={formData}
         handleInputChange={handleInputChange}
-        formTitle="Adicionar Receita"
+        formTitle={editingIncomeId ? "Editar receita" : "Nova receita"}
         formFields={[
           {
             name: "selectedIncomeOrigin",

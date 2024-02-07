@@ -67,7 +67,7 @@ const FinancialDialog = ({
                     type="number"
                     name={field.name}
                     label={field.label}
-                    value={formatCurrency(formData[field.name])}
+                    value={formData && formatCurrency(formData[field.name])} // Added check for formData
                     onChange={(e) => {
                       const inputText = e.target.value;
                       const formattedValue = formatCurrency(inputText);
@@ -83,7 +83,7 @@ const FinancialDialog = ({
                     type="text"
                     name={field.name}
                     label={field.label}
-                    value={formData[field.name]}
+                    value={formData && formData[field.name]} // Added check for formData
                     onChange={(e) => {
                       const inputText = e.target.value;
 
@@ -100,7 +100,7 @@ const FinancialDialog = ({
                     typeOrClass={field.typeOrClass}
                     name={field.name}
                     onChange={handleInputChange}
-                    value={formData[field.name]}
+                    value={formData && formData[field.name]} // Added check for formData
                     label={field.label}
                   />
                 )}
@@ -119,8 +119,13 @@ const FinancialDialog = ({
         <Button onClick={handleClose} color="primary">
           Cancelar
         </Button>
-        <Button onClick={handleFormSubmit} color="primary" variant="contained">
-          {formTitle}
+        <Button
+          onClick={handleFormSubmit}
+          color="primary"
+          variant="contained"
+          style={{ marginLeft: "12px" }}
+        >
+          SALVAR RECEITA
         </Button>
       </DialogActions>
     </Dialog>

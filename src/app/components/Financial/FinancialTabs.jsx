@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Stack, Tabs, Tab, Grid, Typography, Box, Button } from "@mui/material";
 import IncomesTable from "./IncomesTable";
-import IncomeModal from "./IncomeModal";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,9 +60,6 @@ export default function FinancialTabs() {
           <Grid item xs={12} mt={2} ml={4}>
             <Stack spacing={2} maxWidth="82%">
               <IncomesTable />
-              <Box textAlign="right" pr={4}>
-                <IncomeModal />
-              </Box>
             </Stack>
           </Grid>
         </Grid>

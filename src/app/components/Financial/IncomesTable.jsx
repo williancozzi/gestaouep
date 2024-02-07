@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
+import Button from "@mui/material/Button";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -11,14 +12,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getIncomesFromFirestore } from "../../services/getIncomesFromFirestore";
 import { deleteIncomeFromFirestore } from "../../services/deleteIncomeFromFirestore";
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import CustomizedSnackbars from "../CustomizedSnackbars";
+import IncomeModal from "./IncomeModal";
+import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 
 export default function IncomesTable() {
   const rowsPerPage = 10;
   const [page, setPage] = useState(0);
   const [incomes, setIncomes] = useState([]);
   const [isFetchComplete, setIsFetchComplete] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingIncome, setEditingIncome] = useState(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [incomeToDelete, setIncomeToDelete] = useState(null);
 
   const [snackBarStatus, setSnackBarStatus] = useState({
     isOpen: false,
@@ -27,18 +34,18 @@ export default function IncomesTable() {
   });
 
   useEffect(() => {
-    const fetchIncomes = async () => {
-      try {
-        const incomesFromFirestore = await getIncomesFromFirestore();
-        setIncomes(incomesFromFirestore);
-        setIsFetchComplete(true);
-      } catch (error) {
-        console.error("Error fetching incomes from Firestore: ", error);
-      }
-    };
-
     fetchIncomes();
   }, []);
+
+  async function fetchIncomes() {
+    try {
+      const incomes = await getIncomesFromFirestore();
+      setIncomes(incomes);
+      setIsFetchComplete(true);
+    } catch (error) {
+      console.error("Error fetching incomes from Firestore: ", error);
+    }
+  }
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -52,20 +59,27 @@ export default function IncomesTable() {
     };
   };
 
+  function handleEdit(incomeId) {
+    const editedIncome = incomes.find((income) => income.id === incomeId);
+    setEditingIncome(editedIncome);
+    setIsModalOpen(true);
+  }
+
+  const handleDelete = (incomeId) => {
+    setIncomeToDelete(incomeId);
+    setOpenDeleteDialog(true);
+  };
+
   const handleEditDebounced = debounce(handleEdit, 1000);
   const handleDeleteDebounced = debounce(handleDelete, 1000);
 
-  function handleEdit(incomeId) {
-    const editedIncome = incomes.find((income) => income.id === incomeId);
-    console.log("Edit clicked for income:", editedIncome);
-    // Adicione lógica de edição aqui
-  }
-
-  async function handleDelete(incomeId) {
+  async function handleConfirmDelete() {
     try {
-      const deletedIncome = incomes.find((income) => income.id === incomeId);
+      const deletedIncome = incomes.find(
+        (income) => income.id === incomeToDelete
+      );
 
-      await deleteIncomeFromFirestore(incomeId);
+      await deleteIncomeFromFirestore(incomeToDelete);
 
       const updatedIncomes = await getIncomesFromFirestore();
       setIncomes(updatedIncomes);
@@ -83,6 +97,9 @@ export default function IncomesTable() {
         severity: "error",
         message: "Erro ao excluir a receita.",
       });
+    } finally {
+      setOpenDeleteDialog(false);
+      setIncomeToDelete(null);
     }
   }
 
@@ -99,6 +116,10 @@ export default function IncomesTable() {
       ...snackBarStatus,
       isOpen: false,
     });
+  };
+
+  const handleDialogOpen = () => {
+    setIsModalOpen(true);
   };
 
   const renderRows = () => {
@@ -121,7 +142,7 @@ export default function IncomesTable() {
               textOverflow: "ellipsis",
             }}
           >
-            {truncateText(income.incomeDescription, 40)}
+            {truncateText(income.incomeDescription, 110)}
           </TableCell>
           <TableCell>
             <Stack direction="row" spacing={4}>
@@ -140,35 +161,58 @@ export default function IncomesTable() {
   };
 
   return (
-    <Paper>
-      <TableContainer>
-        <Table aria-label="tabela de receitas">
-          <TableHead sx={{ backgroundColor: "#d9d9db" }}>
-            <TableRow>
-              <TableCell>Origem</TableCell>
-              <TableCell>Forma de Pagamento</TableCell>
-              <TableCell>Valor (R$)</TableCell>
-              <TableCell>Descrição</TableCell>
-              <TableCell>Opções</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderRows()}</TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        component="div"
-        count={incomes.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        rowsPerPageOptions={[]}
-      />
-      <CustomizedSnackbars
-        severity={snackBarStatus.severity}
-        message={snackBarStatus.message}
-        isOpen={snackBarStatus.isOpen}
-        handleClose={handleCloseSnackBar}
-      />
-    </Paper>
+    <Box>
+      <Paper>
+        <TableContainer>
+          <Table aria-label="tabela de receitas">
+            <TableHead sx={{ backgroundColor: "#d9d9db" }}>
+              <TableRow>
+                <TableCell>Origem</TableCell>
+                <TableCell>Forma de Pagamento</TableCell>
+                <TableCell>Valor (R$)</TableCell>
+                <TableCell>Descrição</TableCell>
+                <TableCell>Opções</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{renderRows()}</TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          component="div"
+          count={incomes.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPageOptions={[]}
+        />
+
+        <CustomizedSnackbars
+          severity={snackBarStatus.severity}
+          message={snackBarStatus.message}
+          isOpen={snackBarStatus.isOpen}
+          handleClose={handleCloseSnackBar}
+        />
+        <Box textAlign="right" pr={4} pb={2}>
+          <Button variant="contained" onClick={handleDialogOpen}>
+            ADICIONAR UMA NOVA RECEITA
+          </Button>
+          <IncomeModal
+            open={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+              setEditingIncome(null);
+            }}
+            initialFormData={editingIncome}
+            editingIncomeId={editingIncome?.id}
+            refreshIncomes={fetchIncomes}
+          />
+        </Box>
+        <DeleteConfirmationDialog
+          open={openDeleteDialog}
+          onClose={() => setOpenDeleteDialog(false)}
+          onConfirm={handleConfirmDelete}
+        />
+      </Paper>
+    </Box>
   );
 }
