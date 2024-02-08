@@ -34,7 +34,7 @@ const Balance = ({ totalIncome, totalExpense }) => {
       </div>
       <hr />
       <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <h1>Balancete:</h1>
+        <h1>Saldo:</h1>
         <h1 style={{ color: balance > 0 ? "blue" : "darkred" }}>
           R$ {formattedBalance}
         </h1>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { expenseClass, expenseType } from "./FinancialSelect";
 import FinancialDialog from "./FinancialDialog";
 import CustomizedSnackbars from "../CustomizedSnackbars";
-import { saveExpensesToFirestore } from "../../services/saveExpensesToFirestore";
+import { saveExpensesToFirestore } from "../../services/saveExpensesToFirestore.js";
 
 export default function ExpenseModal({
   open,

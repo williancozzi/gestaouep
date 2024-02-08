@@ -1,7 +1,10 @@
 import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import { firebase } from "../../../firebase.config";
 
-export async function saveExpensesToFirestore(expense, editingExpenseId = null) {
+export async function saveExpensesToFirestore(
+  expense,
+  editingExpenseId = null
+) {
   try {
     if (editingExpenseId) {
       const expenseRef = doc(firebase.db, "expenses", editingExpenseId);
