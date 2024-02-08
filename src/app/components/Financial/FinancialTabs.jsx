@@ -1,7 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Stack, Tabs, Tab, Grid, Typography, Box, Button } from "@mui/material";
+import { Stack, Tabs, Tab, Grid, Typography, Box } from "@mui/material";
 import IncomesTable from "./IncomesTable";
+import ExpensesTable from "./ExpensesTable";
+import Balance from "./Balance";
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -41,6 +43,8 @@ function a11yProps(index) {
 }
 export default function FinancialTabs() {
   const [value, setValue] = React.useState(0);
+  const [totalIncome, setTotalIncome] = React.useState(0);
+  const [totalExpense, setTotalExpense] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -59,16 +63,34 @@ export default function FinancialTabs() {
         <Grid container alignContent="center" width="100vw">
           <Grid item xs={12} mt={2} ml={4}>
             <Stack spacing={2} maxWidth="82%">
-              <IncomesTable />
+              <IncomesTable
+                totalIncome={totalIncome}
+                setTotalIncome={setTotalIncome}
+              />
             </Stack>
           </Grid>
         </Grid>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        expense table
+        <Grid container alignContent="center" width="100vw">
+          <Grid item xs={12} mt={2} ml={4}>
+            <Stack spacing={2} maxWidth="82%">
+              <ExpensesTable
+                totalExpense={totalExpense}
+                setTotalExpense={setTotalExpense}
+              />
+            </Stack>
+          </Grid>
+        </Grid>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        Balancete
+        <Grid container alignContent="center" width="100vw">
+          <Grid item xs={12} mt={2} ml={4}>
+            <Stack spacing={2} maxWidth="82%">
+              <Balance totalIncome={totalIncome} totalExpense={totalExpense} />
+            </Stack>
+          </Grid>
+        </Grid>
       </CustomTabPanel>
     </Box>
   );

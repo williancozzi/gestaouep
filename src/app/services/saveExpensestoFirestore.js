@@ -1,14 +1,20 @@
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc } from "firebase/firestore";
 import { firebase } from "../../../firebase.config";
 
-export default async function saveExpensestoFirestore(expense) {
+export async function saveExpensesToFirestore(expense, editingExpenseId = null) {
   try {
-    const docRef = await addDoc(collection(firebase.db, "expenses"), expense);
+    if (editingExpenseId) {
+      const expenseRef = doc(firebase.db, "expenses", editingExpenseId);
+      await updateDoc(expenseRef, expense);
+      console.log("Despesa atualizada com ID: ", editingExpenseId);
+    } else {
+      const docRef = await addDoc(collection(firebase.db, "expenses"), expense);
+      console.log("Nova despesa com ID: ", docRef.id);
+    }
 
-    console.log("Nova despesa com ID: ", docRef.id);
     return true;
   } catch (error) {
-    console.error("Erro ao adicionar documento ", error);
-    return false;
+    console.error("Erro ao salvar/atualizar documento ", error);
+    throw new Error("Falha ao salvar/atualizar os dados no banco.");
   }
 }

@@ -10,22 +10,22 @@ import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { getIncomesFromFirestore } from "../../services/getIncomesFromFirestore";
-import { deleteIncomeFromFirestore } from "../../services/deleteIncomeFromFirestore";
+import { getExpensesFromFirestore } from "../../services/getExpensesFromFirestore";
+import { deleteExpenseFromFirestore } from "../../services/deleteExpenseFromFirestore";
 import { Box, Stack } from "@mui/material";
 import CustomizedSnackbars from "../CustomizedSnackbars";
-import IncomeModal from "./IncomeModal";
+import ExpenseModal from "./ExpenseModal";
 import DeleteConfirmationDialog from "./DeleteConfirmationDialog";
 
-export default function IncomesTable({ totalIncome, setTotalIncome }) {
+export default function ExpensesTable({ totalExpense, setTotalExpense }) {
   const rowsPerPage = 10;
   const [page, setPage] = useState(0);
-  const [incomes, setIncomes] = useState([]);
+  const [expenses, setExpenses] = useState([]);
   const [isFetchComplete, setIsFetchComplete] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingIncome, setEditingIncome] = useState(null);
+  const [editingExpense, setEditingExpense] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [incomeToDelete, setIncomeToDelete] = useState(null);
+  const [expenseToDelete, setExpenseToDelete] = useState(null);
 
   const [snackBarStatus, setSnackBarStatus] = useState({
     isOpen: false,
@@ -34,22 +34,22 @@ export default function IncomesTable({ totalIncome, setTotalIncome }) {
   });
 
   useEffect(() => {
-    fetchIncomes();
+    fetchExpenses();
   }, []);
 
-  async function fetchIncomes() {
+  async function fetchExpenses() {
     try {
-      const incomes = await getIncomesFromFirestore();
-      setIncomes(incomes);
+      const expenses = await getExpensesFromFirestore();
+      setExpenses(expenses);
       setIsFetchComplete(true);
 
-      const total = incomes.reduce(
-        (sum, income) => sum + Number(income.incomeValue),
+      const total = expenses.reduce(
+        (sum, expense) => sum + Number(expense.expenseValue),
         0
       );
-      setTotalIncome(total);
+      setTotalExpense(total);
     } catch (error) {
-      console.error("Error fetching incomes from Firestore: ", error);
+      console.error("Error fetching expenses from Firestore: ", error);
     }
   }
 
@@ -65,14 +65,14 @@ export default function IncomesTable({ totalIncome, setTotalIncome }) {
     };
   };
 
-  function handleEdit(incomeId) {
-    const editedIncome = incomes.find((income) => income.id === incomeId);
-    setEditingIncome(editedIncome);
+  function handleEdit(expenseId) {
+    const editedExpense = expenses.find((expense) => expense.id === expenseId);
+    setEditingExpense(editedExpense);
     setIsModalOpen(true);
   }
 
-  const handleDelete = (incomeId) => {
-    setIncomeToDelete(incomeId);
+  const handleDelete = (expenseId) => {
+    setExpenseToDelete(expenseId);
     setOpenDeleteDialog(true);
   };
 
@@ -81,31 +81,31 @@ export default function IncomesTable({ totalIncome, setTotalIncome }) {
 
   async function handleConfirmDelete() {
     try {
-      const deletedIncome = incomes.find(
-        (income) => income.id === incomeToDelete
+      const deletedExpense = expenses.find(
+        (expense) => expense.id === expenseToDelete
       );
 
-      await deleteIncomeFromFirestore(incomeToDelete);
+      await deleteExpenseFromFirestore(expenseToDelete);
 
-      const updatedIncomes = await getIncomesFromFirestore();
-      setIncomes(updatedIncomes);
+      const updatedExpenses = await getExpensesFromFirestore();
+      setExpenses(updatedExpenses);
 
       setSnackBarStatus({
         isOpen: true,
         severity: "success",
-        message: "Receita excluída com sucesso!",
+        message: "Despesa excluída com sucesso!",
       });
     } catch (error) {
-      console.error("Erro ao excluir a receita: ", error);
+      console.error("Erro ao excluir a despesa: ", error);
 
       setSnackBarStatus({
         isOpen: true,
         severity: "error",
-        message: "Erro ao excluir a receita.",
+        message: "Erro ao excluir a despesa.",
       });
     } finally {
       setOpenDeleteDialog(false);
-      setIncomeToDelete(null);
+      setExpenseToDelete(null);
     }
   }
 
@@ -129,19 +129,19 @@ export default function IncomesTable({ totalIncome, setTotalIncome }) {
   };
 
   const renderRows = () => {
-    return incomes
+    return expenses
       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-      .map((income) => (
+      .map((expense) => (
         <TableRow
-          key={income.id}
+          key={expense.id}
           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
         >
           <TableCell component="th" scope="row">
-            {income.selectedIncomeOrigin}
+            {expense.selectedExpenseOrigin}
           </TableCell>
-          <TableCell>{income.selectedIncomeType}</TableCell>
+          <TableCell>{expense.selectedExpenseType}</TableCell>
           <TableCell>
-            {parseFloat(income.incomeValue).toLocaleString("pt-BR", {
+            {parseFloat(expense.expenseValue).toLocaleString("pt-BR", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
             })}
@@ -153,17 +153,17 @@ export default function IncomesTable({ totalIncome, setTotalIncome }) {
               textOverflow: "ellipsis",
             }}
           >
-            {truncateText(income.incomeDescription, 110)}
+            {truncateText(expense.expenseDescription, 110)}
           </TableCell>
           <TableCell>
             <Stack direction="row" spacing={4}>
               <EditIcon
                 style={{ cursor: "pointer" }}
-                onClick={() => handleEditDebounced(income.id)}
+                onClick={() => handleEditDebounced(expense.id)}
               />
               <DeleteIcon
                 style={{ cursor: "pointer", color: "red" }}
-                onClick={() => handleDeleteDebounced(income.id)}
+                onClick={() => handleDeleteDebounced(expense.id)}
               />
             </Stack>
           </TableCell>
@@ -175,7 +175,7 @@ export default function IncomesTable({ totalIncome, setTotalIncome }) {
     <Box>
       <Paper>
         <TableContainer>
-          <Table aria-label="tabela de receitas">
+          <Table aria-label="tabela de despesas">
             <TableHead sx={{ backgroundColor: "#d9d9db" }}>
               <TableRow>
                 <TableCell>Origem</TableCell>
@@ -190,7 +190,7 @@ export default function IncomesTable({ totalIncome, setTotalIncome }) {
         </TableContainer>
         <TablePagination
           component="div"
-          count={incomes.length}
+          count={expenses.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -205,17 +205,17 @@ export default function IncomesTable({ totalIncome, setTotalIncome }) {
         />
         <Box textAlign="right" pr={4} pb={2}>
           <Button variant="contained" onClick={handleDialogOpen}>
-            ADICIONAR UMA NOVA RECEITA
+            ADICIONAR UMA NOVA DESPESA
           </Button>
-          <IncomeModal
+          <ExpenseModal
             open={isModalOpen}
             onClose={() => {
               setIsModalOpen(false);
-              setEditingIncome(null);
+              setEditingExpense(null);
             }}
-            initialFormData={editingIncome}
-            editingIncomeId={editingIncome?.id}
-            refreshIncomes={fetchIncomes}
+            initialFormData={editingExpense}
+            editingExpenseId={editingExpense?.id}
+            refreshExpenses={fetchExpenses}
           />
         </Box>
         <DeleteConfirmationDialog

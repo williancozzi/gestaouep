@@ -125,7 +125,7 @@ const FinancialDialog = ({
           variant="contained"
           style={{ marginLeft: "12px" }}
         >
-          SALVAR RECEITA
+          {formTitle === "Nova despesa" ? "Salvar despesa" : "Salvar receita"}
         </Button>
       </DialogActions>
     </Dialog>
