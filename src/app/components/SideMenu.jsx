@@ -1,4 +1,6 @@
 "use client";
+import logo from "../../../public/logo.webp";
+import Image from "next/image";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -17,19 +19,34 @@ export default function SideMenu() {
     <Box
       sx={{
         minWidth: 230,
-        backgroundColor: "#424242",
         height: "100%",
+        borderRight: "1px solid rgba(0, 0, 0, 0.1)",
       }}
     >
       <nav aria-label="main mailbox folders">
         <List>
+          <Link href={"/dashboard"}>
+            <Image
+              priority={true}
+              src={logo}
+              alt="logo"
+              width={280}
+              height={90}
+              style={{ marginBottom: 2 }}
+            />
+          </Link>
           <ListItem disablePadding>
             <Link href="/financial" passHref legacyBehavior>
               <ListItemButton>
                 <ListItemIcon>
                   <AttachMoneyIcon />
                 </ListItemIcon>
-                <ListItemText primary="Financeiro" />
+                <ListItemText
+                  primary="Financeiro"
+                  sx={{
+                    color: "black",
+                  }}
+                />
               </ListItemButton>
             </Link>
           </ListItem>
@@ -38,7 +55,12 @@ export default function SideMenu() {
               <ListItemIcon>
                 <Groups />
               </ListItemIcon>
-              <ListItemText primary="Associados" />
+              <ListItemText
+                primary="Associados"
+                sx={{
+                  color: "black",
+                }}
+              />
             </ListItemButton>
           </ListItem>
         </List>

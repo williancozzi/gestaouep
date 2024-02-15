@@ -1,5 +1,4 @@
 .header {
-  background-color: #007b93;
   height: 95px;
   display: flex;
   flex-direction: column;
@@ -7,11 +6,13 @@
   padding: 22px;
   box-sizing: border-box;
   align-items: flex-end;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 
   .signin {
     display: flex;
     gap: 20px;
     justify-content: center;
     align-items: center;
+    color: #000;
   }
 }

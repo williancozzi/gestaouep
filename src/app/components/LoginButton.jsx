@@ -9,7 +9,7 @@ export default function LoginButton() {
         variant="contained"
         onClick={() => signIn({ callbackUrl: "/dashboard" })}
       >
-        Login
+        Entrar
       </Button>
     </Box>
   );

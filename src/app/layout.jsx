@@ -2,7 +2,6 @@ import "./globals.css";
 import AuthContext from "./authContext";
 import SideMenu from "./components/SideMenu";
 import Header from "./components/Header";
-import Footer from "./components/Footer";
 import { Box, Grid } from "@mui/material";
 
 export const metadata = {
@@ -27,14 +26,15 @@ export default function RootLayout({ children }) {
       </head>
       <AuthContext>
         <body>
-          <Header />
-          <Box display={"flex"} height="calc(100% - 128px)">
+          <Box display="flex" height="100%" m={0}>
             <SideMenu />
-            <Grid margin={1} color={"black"}>
-              {children}
-            </Grid>
+            <Box display="flex" flexDirection="column" flex={1}>
+              <Header />
+              <Grid margin={0} color="black" flex={1}>
+                {children}
+              </Grid>
+            </Box>
           </Box>
-          <Footer />
         </body>
       </AuthContext>
     </html>

@@ -1,10 +1,8 @@
 "use client";
-import logo from "../../../public/logo.png";
+
 import styles from "../styles/Structure.module.scss";
-import Image from "next/image";
-import { Button, Stack } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { useSession, signOut } from "next-auth/react";
-import Link from "next/link";
 
 export default function Header() {
   const { data: session } = useSession();
@@ -15,18 +13,13 @@ export default function Header() {
         direction="row"
         spacing={8}
         width="100%"
+        height="100%"
         justifyContent="space-between"
+        sx={{ backgroundColor: "#fff" }}
       >
-        <Link href={"/dashboard"}>
-          <Image
-            priority={true}
-            src={logo}
-            alt="logo"
-            width={80}
-            height={80}
-            style={{ marginBottom: 2 }}
-          />
-        </Link>
+        <Typography className={styles.signin} fontWeight={500} fontSize={24}>
+          Financeiro
+        </Typography>
         <div className={styles.signin}>
           Olá {session.user?.name || session.user?.email}
           <Button
