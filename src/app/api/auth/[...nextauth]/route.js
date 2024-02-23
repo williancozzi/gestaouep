@@ -43,7 +43,7 @@ const handler = NextAuth({
   theme: {
     colorScheme: "light",
     brandColor: "#007b93",
-    logo: "https://cdn.discordapp.com/attachments/445728799850627082/1171870697627340800/logo-azul.png",
+    logo: "https://static.wixstatic.com/media/05ed4b_97f6df34…85,usm_0.33_1.00_0.00,enc_auto/LOGO%20DEGRADE.png",
     buttonText: "#007b93",
   },
 });
